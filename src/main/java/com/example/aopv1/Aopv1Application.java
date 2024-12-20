@@ -1,5 +1,7 @@
 package com.example.aopv1;
 
+import com.example.aopv1.dao.AccountDAO;
+import com.example.aopv1.dao.MembershipDAO;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,11 +15,17 @@ public class Aopv1Application {
 	}
 
 	@Bean
-	public CommandLineRunner commandLineRunner(String[] args){
+	public CommandLineRunner commandLineRunner(AccountDAO theAccountDAO, MembershipDAO membershipDAO){
 		return runner -> {
-			System.out.println("Hello");
+			beforeAdvice(theAccountDAO, membershipDAO);
+
 		};
 
+	}
+
+	private void beforeAdvice(AccountDAO theAccountDAO, MembershipDAO theMembershipDAO) {
+		theAccountDAO.addAccount();
+		theMembershipDAO.addAccount();
 	}
 
 }
