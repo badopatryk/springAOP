@@ -33,6 +33,7 @@ public class Aopv1Application {
 
         theMembershipDAO.addAccount();
         theMembershipDAO.goToSleep();
+        theMembershipDAO.addAccount();
     }
 
 }
