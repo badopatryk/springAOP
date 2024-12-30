@@ -6,18 +6,18 @@ import org.aspectj.lang.annotation.Pointcut;
 @Aspect
 public class AopDeclarations {
     @Pointcut("execution(* com.example.aopv1.dao.*.make*(..))")
-    public void notForMakePrefix() {
+    public void makePrefixInDao() {
     }
 
     @Pointcut("execution(* com.example.aopv1.dao.*.do*(..))")
-    public void notForDoPrefix() {
+    public void doPrefixInDao() {
     }
 
     @Pointcut("execution(* com.example.aopv1.dao.*.*(..))")
     public void forDaoPackage() {
     }
 
-    @Pointcut("forDaoPackage() && !(notForDoPrefix() || notForMakePrefix())")
+    @Pointcut("forDaoPackage() && !(doPrefixInDao() || makePrefixInDao())")
     public void forDaoPackageNotMakeOrDoMethods() {
     }
 }
