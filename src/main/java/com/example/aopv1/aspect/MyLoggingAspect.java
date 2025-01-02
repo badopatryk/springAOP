@@ -2,6 +2,7 @@ package com.example.aopv1.aspect;
 
 import com.example.aopv1.Account;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -13,16 +14,39 @@ import java.util.List;
 @Order(2)
 public class MyLoggingAspect {
 
+    @Around("execution(* com.example.aopv1.service.*.getFortune(..))")
+    public Object aroundGetFortune(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+        String method = proceedingJoinPoint.getSignature().toShortString();
+        System.out.println("\n ---> executing @Around advice on method: " + method);
+
+        long begin = System.currentTimeMillis();
+
+        Object result = null;
+        try{
+            result = proceedingJoinPoint.proceed();
+        }
+        catch (Exception exception){
+            System.out.println(exception.getMessage());
+            result = "Big exception";
+        }
+
+        long end = System.currentTimeMillis();
+        long duration = end - begin;
+        System.out.println("The duration is: " + duration / 1000 + "s");
+
+        return result;
+    }
+
     @After("execution(* com.example.aopv1.dao.AccountDAO.findAccounts(..))")
-    public void findAccountsAfterAdvice(JoinPoint joinPoint){
+    public void findAccountsAfterAdvice(JoinPoint joinPoint) {
 
         String method = joinPoint.getSignature().toShortString();
         System.out.println("\n ---> executing @After advice on method: " + method);
     }
 
     @AfterThrowing(pointcut = "execution(* com.example.aopv1.dao.AccountDAO.findAccounts(..))",
-    throwing = "exception")
-    public void findAccountsAfterThrowingAdvice(JoinPoint joinPoint,Throwable exception){
+            throwing = "exception")
+    public void findAccountsAfterThrowingAdvice(JoinPoint joinPoint, Throwable exception) {
         String method = joinPoint.getSignature().toShortString();
 
         System.out.println("\n ---> executing @AfterThrowing advice on method: " + method);

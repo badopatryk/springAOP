@@ -2,6 +2,7 @@ package com.example.aopv1;
 
 import com.example.aopv1.dao.AccountDAO;
 import com.example.aopv1.dao.MembershipDAO;
+import com.example.aopv1.service.TrafficFortuneService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,13 +18,37 @@ public class Aopv1Application {
     }
 
     @Bean
-    public CommandLineRunner commandLineRunner(AccountDAO theAccountDAO, MembershipDAO membershipDAO) {
+    public CommandLineRunner commandLineRunner(AccountDAO theAccountDAO, MembershipDAO membershipDAO, TrafficFortuneService trafficFortuneService) {
         return runner -> {
             //beforeAdvice(theAccountDAO, membershipDAO);
             //afterReturningAdvice(theAccountDAO);
             //afterThrowingAdvice(theAccountDAO);
-            afterAdvice(theAccountDAO);
+            //afterAdvice(theAccountDAO);
+            //aroundAdvice(trafficFortuneService);
+            aroundAdviceExceptionHandling(trafficFortuneService);
         };
+    }
+
+    private void aroundAdviceExceptionHandling(TrafficFortuneService trafficFortuneService) {
+        System.out.println("Main program: aroundAdviceExceptionHandling");
+
+        System.out.println("Calling getFortune()");
+
+        boolean breakCode = true;
+
+        String fortune = trafficFortuneService.getFortune(breakCode);
+
+        System.out.println("My fortune is: " + fortune);
+    }
+
+    private void aroundAdvice(TrafficFortuneService trafficFortuneService) {
+        System.out.println("Main program: aroundAdvice");
+
+        System.out.println("Calling getFortune()");
+
+        String fortune = trafficFortuneService.getFortune();
+
+        System.out.println("My fortune is: " + fortune);
     }
 
     private void afterAdvice(AccountDAO theAccountDAO) {
